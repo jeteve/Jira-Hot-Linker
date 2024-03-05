@@ -14,7 +14,6 @@ window.onerror = function (msg, file, line, column, error) {
 
 async function saveOptions() {
   const status = document.getElementById('status');
-  const inlineBadge = document.getElementById('inlinebadge').checked ? true : false;
   const domains = document.getElementById('domains')
     .value
     .split(',')
@@ -48,7 +47,7 @@ async function saveOptions() {
   }
 
   if (granted) {
-    await storageSet({instanceUrl, domains, inlineBadge, v15upgrade: true});
+    await storageSet({ instanceUrl, domains });
     resetDeclarativeMapping();
     status.innerHTML = '<br />Options <strong>saved.</strong>';
     setTimeout(function () {
@@ -59,7 +58,6 @@ async function saveOptions() {
     return;
   }
   document.getElementById('domains').value = domains && domains.join(', ');
-  document.getElementById('upgradeWarning').style.display = 'none';
 }
 
 async function main() {
@@ -71,17 +69,8 @@ async function main() {
 function ConfigPage(props) {
   return (
     <div>
-      {(() => {
-        if (!props.v15upgrade) {
-          return (
-            <label id="upgradeWarning" className='upgradeWarning'>If you recently upgraded the extension make sure to
-              click Save to activate
-              the new reduced permissions !
-            <br/><br/></label>);
-        }
-      })()}
       <label>
-        Your full Jira instance url: <br/>
+        Your Jira instance url: <br />
         <input
           id="instanceUrl"
           type="text"
@@ -92,19 +81,14 @@ function ConfigPage(props) {
       <label>
         Locations where the plugin should be activated, comma separated: <br/>
         This can be a domain a url or any valid {' '}
-        <strong><a href='https://developer.chrome.com/extensions/match_patterns'>match pattern</a>
+        <strong><a target="_blank" href='https://developer.chrome.com/extensions/match_patterns'>match pattern</a>
         </strong>.
         <br/>
         <textarea id="domains" defaultValue={props.domains && props.domains.join(', ')} placeholder="1 site per line"/>
         <br/>
         You can also add new domains at any time by clicking on the extension icon!
       </label>
-      <br/>
-      <label>
-        <input id="inlinebadge" type="checkbox" defaultChecked={props.inlineBadge}/>
-        Generate inline story badges (experimental)
-      </label>
-      <br/>
+      <br />
       <div id='status'></div>
       <br/>
       <button onClick={saveOptions} id="save">Save</button>
@@ -113,4 +97,3 @@ function ConfigPage(props) {
 }
 
 document.addEventListener('DOMContentLoaded', main);
-

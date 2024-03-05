@@ -1,13 +1,13 @@
 {
-  "name": "Jira HotLinker",
-  "description": "Jira HotLinker, quick access to Jira metadata when hovering over ticket numbers!",
-  "version": "1.8.0",
+  "name": "JBadger",
+  "description": "Jira Badger, turn text ticket number into rich badges.",
+  "version": "1.0.0",
   "manifest_version": 3,
   "icons": {
     "128": "resources/jiralink128.png"
   },
   "action": {
-    "default_title": "Click to always search for tickets on this page"
+    "default_title": "Click to turn Jira issues numbers into rich badges in this page."
   },
   "minimum_chrome_version": "88",
   "background": {
@@ -29,9 +29,7 @@
     "declarativeContent",
     "storage"
   ],
-  "host_permissions": [
-    "https://github.com/"
-  ],
+  "host_permissions": [],
   "optional_host_permissions": [
     "*://*/*"
   ],

@@ -1,13 +1,11 @@
 ///*global chrome */
 import defaultConfig from 'options/config.js';
 import {storageGet, storageSet, permissionsRequest, promisifyChrome} from 'src/chrome';
-import {contentScript, resetDeclarativeMapping} from 'options/declarative';
-//import $ from 'jquery';
+import { contentScript, resetDeclarativeMapping } from 'options/declarative';
 
 const executeScript = promisifyChrome(chrome.scripting, 'executeScript');
 const sendMessage = promisifyChrome(chrome.tabs, 'sendMessage');
 
-var SEND_RESPONSE_IS_ASYNC = true;
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   console.log('Got request', request);
   if (request.action === 'get') {
@@ -40,13 +38,13 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         });
     }
 
-    return SEND_RESPONSE_IS_ASYNC;
+    return true;
   }
 });
 
 async function browserOnClicked (tab) {
   const config = await storageGet(defaultConfig);
-  if (!config.instanceUrl || !config.v15upgrade) {
+  if (!config.instanceUrl) {
     chrome.runtime.openOptionsPage();
     return;
   }
@@ -85,7 +83,7 @@ async function browserOnClicked (tab) {
 (function () {
   chrome.runtime.onInstalled.addListener(async () => {
     const config = await storageGet(defaultConfig);
-    if (!config.instanceUrl || !config.v15upgrade) {
+    if (!config.instanceUrl) {
       chrome.runtime.openOptionsPage();
       return;
     }

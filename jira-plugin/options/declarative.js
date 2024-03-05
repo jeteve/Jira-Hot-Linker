@@ -1,4 +1,4 @@
-/*global chrome */
+///*global chrome */
 import defaultConfig from 'options/config';
 import {uniqueId} from 'lodash';
 import regexEscape from 'escape-string-regexp';
