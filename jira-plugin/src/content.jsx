@@ -4,7 +4,7 @@ import debounce from 'lodash/debounce';
 import template from 'lodash/template';
 import forEach from 'lodash/forEach';
 import {centerPopup, waitForDocument} from 'src/utils';
-import {sendMessage, storageGet, storageSet} from 'src/chrome';
+import { storageGet, storageSet } from 'src/chrome';
 import {snackBar} from 'src/snack';
 import config from 'options/config.js';
 import {renderJiraBadges} from 'src/jirabadges.js';
@@ -59,8 +59,13 @@ storageGet({'ui_tips_shown': []}).then(function ({ui_tips_shown}) {
 });
 
 async function get(url) {
-  var response = await sendMessage({action: 'get', url: url});
+  var type = 'json';
+  if (url.endsWith('.html')) {
+    type = 'text';
+  }
+  var response = await chrome.runtime.sendMessage({ action: 'get', type: type, url: url }); //await sendMessage({action: 'get', url: url});
   if (response.result) {
+    console.log('Returning from response = ', response);
     return response.result;
   } else if (response.error) {
     const err = new Error(response.error.statusText);
@@ -86,8 +91,8 @@ async function mainAsyncLocal() {
     return;
   }
   const getJiraKeys = buildJiraKeyMatcher(jiraProjectKeys);
-  const annotation = template(await get(chrome.extension.getURL('resources/annotation.html')));
-  const loaderGifUrl = chrome.extension.getURL('resources/ajax-loader.gif');
+  const annotation = template(await get(chrome.runtime.getURL('resources/annotation.html')));
+  const loaderGifUrl = chrome.runtime.getURL('resources/ajax-loader.gif');
 
   /***
    * Retrieve only the text that is directly owned by the node

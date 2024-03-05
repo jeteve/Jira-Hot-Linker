@@ -7,6 +7,7 @@
  */
 export const promisifyChrome = (context, funcName) =>
   (...forwardedArgs) => {
+    console.log('Calling ' + funcName + ' on context ', context);
     const callSiteStack = new Error().stack;
     return new Promise((resolve, reject) => {
       forwardedArgs.push((...resolvedArgs) => {
@@ -28,7 +29,7 @@ const storageGet = promisifyChrome(chrome.storage.sync, 'get');
 const storageSet = promisifyChrome(chrome.storage.sync, 'set');
 const permissionsRequest = promisifyChrome(chrome.permissions, 'request');
 const permissionsRemove = promisifyChrome(chrome.permissions, 'remove');
-const sendMessage = promisifyChrome(chrome.runtime, 'sendMessage');
+const sendMessage = chrome.runtime.sendMessage;// promisifyChrome(chrome.runtime, 'sendMessage');
 
 
 export {

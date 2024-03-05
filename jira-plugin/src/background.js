@@ -2,23 +2,44 @@
 import defaultConfig from 'options/config.js';
 import {storageGet, storageSet, permissionsRequest, promisifyChrome} from 'src/chrome';
 import {contentScript, resetDeclarativeMapping} from 'options/declarative';
-import $ from 'jquery';
+//import $ from 'jquery';
 
 const executeScript = promisifyChrome(chrome.scripting, 'executeScript');
 const sendMessage = promisifyChrome(chrome.tabs, 'sendMessage');
 
 var SEND_RESPONSE_IS_ASYNC = true;
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  console.log('Got request', request);
   if (request.action === 'get') {
-    $.get(request.url).then(result => {
-      sendResponse({
-        result
-      });
+    console.log('Calling fetch');
+    const p = fetch(request.url).then(result => {
+      console.log('Got result', result);
+      // This promises to turn the result into json
+      return result;
     }).catch(error => {
       sendResponse({
         error
       });
     });
+
+    if (request.type === 'json') {
+      p.then(r => { return r.json(); })
+        .then(json => {
+          console.log('Sending json back: ', json);
+          sendResponse({
+            'result': json
+          });
+        }); // The promise ends here as sendResponse has sent the final response message.
+    } else if (request.type === 'text') {
+      p.then(r => { return r.text(); })
+        .then(t => {
+          console.log('Sending back plain text: ', t);
+          sendResponse({
+            'result': t
+          });
+        });
+    }
+
     return SEND_RESPONSE_IS_ASYNC;
   }
 });
@@ -52,7 +73,8 @@ async function browserOnClicked (tab) {
     config.domains.push(origin);
     await storageSet(config);
     await resetDeclarativeMapping();
-    await executeScript(null, {file: contentScript});
+    console.log('Awaiting executeScript on tab ', tab.id);
+    await executeScript({ target: { tabId: tab.id }, files: [contentScript] });
     await sendMessage(tab.id, {
       action: 'message',
       message: origin + ' added successfully !'
