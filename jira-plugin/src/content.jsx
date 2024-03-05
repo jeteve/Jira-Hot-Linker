@@ -23,7 +23,7 @@ async function get(url) {
   }
   var response = await chrome.runtime.sendMessage({ action: 'get', type: type, url: url }); //await sendMessage({action: 'get', url: url});
   if (response.result) {
-    console.log('Returning from response = ', response);
+    //console.log('Returning from response = ', response);
     return response.result;
   } else if (response.error) {
     const err = new Error(response.error.statusText);
@@ -48,7 +48,7 @@ async function mainAsyncLocal() {
     return;
   }
 
-  console.log('Will badgify JIRA tickets starting with ', jiraProjectKeys);
+  // console.log('Will badgify JIRA tickets starting with ', jiraProjectKeys);
   await renderJiraBadges(jiraProjectKeys, INSTANCE_URL, get);
 }
 

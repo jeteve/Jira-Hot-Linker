@@ -1,7 +1,7 @@
 {
-  "name": "jira-hot-linker",
-  "version": "1.7.1",
-  "description": "Jira HotLinker, quick access to Jira metadata when hovering over ticket numbers!",
+  "name": "jbadger",
+  "version": "1.0.0",
+  "description": "Jira Badger, turns JIRA ticket number from text into rich badges",
   "main": " ",
   "scripts": {
     "analyze": "webpack -p --bail --profile --json > stats.json || webpack-bundle-analyzer stats.json",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/helmus/Jira-Hot-Linker.git"
+    "url": "git+https://github.com/jeteve/jbadger"
   },
-  "author": "Willem",
+  "author": "Jerome Eteve",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/helmus/Jira-Hot-Linker/issues"
+    "url": "https://github.com/jeteve/badger"
   },
-  "homepage": "https://github.com/helmus/Jira-Hot-Linker#readme",
+  "homepage": "https://github.com/jeteve/badger",
   "devDependencies": {
     "@babel/cli": "7.17.3",
     "@babel/core": "7.17.5",

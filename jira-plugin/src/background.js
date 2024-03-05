@@ -4,7 +4,6 @@ import {storageGet, storageSet, permissionsRequest, promisifyChrome} from 'src/c
 import { contentScript, resetDeclarativeMapping } from 'options/declarative';
 
 const executeScript = promisifyChrome(chrome.scripting, 'executeScript');
-const sendMessage = promisifyChrome(chrome.tabs, 'sendMessage');
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   console.log('Got request', request);
@@ -23,7 +22,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.type === 'json') {
       p.then(r => { return r.json(); })
         .then(json => {
-          console.log('Sending json back: ', json);
+          //console.log('Sending json back: ', json);
           sendResponse({
             'result': json
           });
@@ -31,7 +30,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     } else if (request.type === 'text') {
       p.then(r => { return r.text(); })
         .then(t => {
-          console.log('Sending back plain text: ', t);
+          //console.log('Sending back plain text: ', t);
           sendResponse({
             'result': t
           });
@@ -54,14 +53,14 @@ async function browserOnClicked (tab) {
     const config = await storageGet(defaultConfig);
     if (config.domains.indexOf(origin) !== -1) {
       try {
-        await sendMessage(tab.id, {
+        await chrome.tabs.sendMessage(tab.id, {
           action: 'message',
           message: origin + ' is already added.'
         });
       } catch (ex) {
         // extension was just installed and not injected on this tab yet
         await executeScript({ target: {tabId: tab.id}, files:[ contentScript ] });
-        await sendMessage(tab.id, {
+        await chrome.tabs.sendMessage(tab.id, {
           action: 'message',
           message: 'Jira HotLinker enabled successfully !'
         });
@@ -71,9 +70,9 @@ async function browserOnClicked (tab) {
     config.domains.push(origin);
     await storageSet(config);
     await resetDeclarativeMapping();
-    console.log('Awaiting executeScript on tab ', tab.id);
+    //console.log('Awaiting executeScript on tab ', tab.id);
     await executeScript({ target: { tabId: tab.id }, files: [contentScript] });
-    await sendMessage(tab.id, {
+    await chrome.tabs.sendMessage(tab.id, {
       action: 'message',
       message: origin + ' added successfully !'
     });
