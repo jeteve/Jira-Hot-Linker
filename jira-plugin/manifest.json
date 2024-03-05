@@ -1,10 +1,10 @@
 {
   "name": "JBadger",
-  "description": "Jira Badger, turn text ticket number into rich badges.",
+  "description": "Jira Badger, turns JIRA ticket number from text into rich badges",
   "version": "1.0.0",
   "manifest_version": 3,
   "icons": {
-    "128": "resources/jiralink128.png"
+    "512": "resources/badger.png"
   },
   "action": {
     "default_title": "Click to turn Jira issues numbers into rich badges in this page."
