@@ -40,3 +40,8 @@ This will be much slower.
 ```sh
 npx webpack-cli build --mode production
 ```
+
+
+# Acknowledgments
+
+This software package originates and is substantially inspired from https://github.com/helmus/Jira-Hot-Linker.
